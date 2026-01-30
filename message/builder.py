@@ -6,7 +6,7 @@ from typing import List, Optional
 
 from weather.models import WeatherDTO
 from .config import MessageConfig
-from .templates import load_templates, pick_greeting, pick_notice, pick_tail
+from .templates import load_templates, pick_greeting, pick_opening, pick_notice, pick_tail
 
 
 class MessageBuilder:
@@ -28,9 +28,6 @@ class MessageBuilder:
         # 1) 低温提醒
         if w.temp_min_c is not None and w.temp_min_c <= 10:
             tips.append("今天气温偏低，出门注意保暖，可带个暖宝宝")
-            
-        if w.temp_max_c is not None and w.temp_max_c  > 15 < 25:
-            tips.append("温度刚刚好，不用穿太厚")
 
         # 2) 高温提醒
         if w.temp_max_c is not None and w.temp_max_c >= 25:
@@ -39,7 +36,7 @@ class MessageBuilder:
         # 3) 降雨提醒（优先天气现象包含“雨”，否则用 POP）
         desc = (w.weather_desc or "")
         if "雨" in desc:
-            tips.append("今天有雨，出门记得带伞")
+            tips.append("今天可能会有阵雨🌧️，出门记得带把伞☂️")
         else:
             if w.precipitation_prob is not None and w.precipitation_prob >= 0.3:
                 tips.append("今天可能有雨，建议备一把折叠伞")
@@ -54,13 +51,13 @@ class MessageBuilder:
             try:
                 scale = int(m.group(1))
                 if scale >= 5:
-                    tips.append("风力较大，注意防风，骑行请注意安全")
+                    tips.append("今天风力较大🌬️，出门时请注意防风")
             except Exception:
                 pass
 
         # 5) 紫外线提醒（优先 uv_desc，其次 uv_index）
         if w.uv_index is not None and w.uv_index >= 6:
-            tips.append("紫外线较强，外出建议做好防晒（帽子/防晒霜）")
+            tips.append("今天紫外线较强🌞，外出时请注意防晒🧴")
         elif (w.uv_desc or "").find("高") != -1 or (w.uv_desc or "").find("较高") != -1:
             tips.append("紫外线偏强，外出建议做好防晒")
 
@@ -74,7 +71,8 @@ class MessageBuilder:
         enabled = set(self.cfg.normalized_enabled())
 
         header = pick_greeting(self.cfg.randomize, self.templates)
-        lines: List[str] = [header, "前方杨记者带来报导——"]
+        opening = pick_opening(self.cfg.randomize, self.templates)
+        lines: List[str] = [header, opening]
 
         # meta：地点/日期（你可以只保留地点不显示 id）
         if "meta" in enabled:
