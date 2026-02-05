@@ -15,7 +15,7 @@ from wxauto import WeChat
 @dataclass(frozen=True)
 class WeChatReadyOptions:
     login_timeout_sec: int = 120
-    press_enter_interval_sec: int = 3
+    press_enter_interval_sec: int = 15
     launch_wait_sec: int = 4
     # 已登录检测：连续成功次数（降低偶发空列表误判）
     logged_in_confirm_times: int = 2
@@ -98,6 +98,7 @@ def _wait_for_login(opt: WeChatReadyOptions) -> WeChat:
 def ensure_wechat_ready(config_path: str = "config.ini", opt: Optional[WeChatReadyOptions] = None) -> WeChat:
     """
     入口函数：确保返回一个“可用且已登录”的 wxauto.WeChat 实例
+    
     - 如果已登录：直接返回（跳过启动与按 Enter）
     - 如果未运行：启动
     - 如果运行但未登录：等待并自动按 Enter
