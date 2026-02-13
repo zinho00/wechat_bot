@@ -66,7 +66,7 @@ def main() -> None:
 
     # 4) 可选：退出微信
     # close_wechat_soft()
-    kill_wechat_hard()
+    # kill_wechat_hard()
 
 
 if __name__ == "__main__":

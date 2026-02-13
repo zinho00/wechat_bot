@@ -87,9 +87,9 @@ class MessageBuilder:
         # 1) 温度范围
         if "temperature" in enabled:
             if w.temp_min_c is None or w.temp_max_c is None:
-                lines.append("今天南山气温：暂无")
+                lines.append("今天肇庆气温：暂无")
             else:
-                lines.append(f"今天南山气温：{w.temp_min_c:.0f}°C ~ {w.temp_max_c:.0f}°C")
+                lines.append(f"今天肇庆气温：{w.temp_min_c:.0f}°C ~ {w.temp_max_c:.0f}°C")
 
         # 2) 天气现象
         if "weather" in enabled:
